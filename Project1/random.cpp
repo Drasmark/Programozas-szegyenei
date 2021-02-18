@@ -7,5 +7,5 @@ int main()
     {
         sum = sum + i;
     }
-    cout<<sum;
+    cout<<sum<<endl;
 }
