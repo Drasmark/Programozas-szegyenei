@@ -1,0 +1,1 @@
+cout << "nem tudom" << endl;
