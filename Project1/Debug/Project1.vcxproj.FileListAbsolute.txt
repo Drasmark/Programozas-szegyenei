@@ -1,3 +1,0 @@
-C:\Users\Mark\Documents\GitHub\Programozas-szegyenei\Project1\Debug\random.cpp
-C:\Users\Mark\Documents\GitHub\Programozas-szegyenei\Project1\Debug\Project1.exe
-C:\Users\Mark\Documents\GitHub\Programozas-szegyenei\Project1\Debug\Project1.pdb
