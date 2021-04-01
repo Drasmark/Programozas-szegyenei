@@ -3,6 +3,7 @@ using UnityEngine;
 using Kinect = Windows.Kinect;
 using System.Collections.Generic;
 
+
 namespace Assets
 {
     public class PlayerMoovmetWithKinect : MonoBehaviour
@@ -12,19 +13,24 @@ namespace Assets
         public Rigidbody2D rb;
         public Animator animator;
         Vector2 movement;
+        int i = 0;
 
         private BodySourceManager _BodyManager;
         private enum directions {SOUTH, WEST, NORTH, EAST, NORTEAST, NORTWEST, SOUTHEAST, SOUTHWEST, STAY}
-
-        // Update is called once per frame
+        
         void Update()
         {
+            
             if (BodySourceManager == null) return;
             _BodyManager = BodySourceManager.GetComponent<BodySourceManager>();
             if (_BodyManager == null) return;
             Kinect.Body[] data = _BodyManager.GetData();
             if (data == null) return;
-            Kinect.Body body = data[0];
+            Kinect.Body body = data[i];
+            if (body.Joints[Kinect.JointType.HandRight].Position.Z == 0) body = data[i++];
+            if (i > 5) i = 0;
+            
+            //Debug.unityLogger.Log(body.Joints[Kinect.JointType.HandRight].Position.Z);
             if (body == null) return;
 
             switch (GetDirection(body)) {
@@ -38,25 +44,24 @@ namespace Assets
                     Moove(-0.75f, 0);
                     break;
                 case directions.NORTH:
-                    Moove(0, 0.75f);
-                    break;
-                case directions.SOUTH:
                     Moove(0, -0.75f);
                     break;
-                case directions.NORTEAST:
-                    Moove(0.75f, 0.75f);
+                case directions.SOUTH:
+                    Moove(0, 0.75f);
                     break;
-                case directions.SOUTHEAST:
+                case directions.NORTEAST:
                     Moove(0.75f, -0.75f);
                     break;
-                case directions.NORTWEST:
-                    Moove(-0.75f, 0.75f);
+                case directions.SOUTHEAST:
+                    Moove(0.75f, 0.75f);
                     break;
-                case directions.SOUTHWEST:
+                case directions.NORTWEST:
                     Moove(-0.75f, -0.75f);
                     break;
+                case directions.SOUTHWEST:
+                    Moove(-0.75f, 0.75f);
+                    break;
             }
-
         }
         void FixedUpdate()
         {
@@ -77,23 +82,26 @@ namespace Assets
             float LeftShoulderYCoord = body.Joints[Kinect.JointType.ShoulderLeft].Position.Y;
             float RightAnkleZCoord = body.Joints[Kinect.JointType.AnkleRight].Position.Z;
             float MidSpineZCoord = body.Joints[Kinect.JointType.SpineMid].Position.Z;
+
+            if (RightHandYCoord > RightShoulderYCoord && LeftHandYCoord > LeftShoulderYCoord)
+                return directions.STAY;
             if (RightHandYCoord > RightShoulderYCoord - 0.25 && RightAnkleZCoord > MidSpineZCoord + 0.20)
                 return directions.NORTEAST;
-            else if (RightHandYCoord > RightShoulderYCoord - 0.25 && RightAnkleZCoord < MidSpineZCoord - 0.20)
+            if (RightHandYCoord > RightShoulderYCoord - 0.25 && RightAnkleZCoord < MidSpineZCoord - 0.20)
                 return directions.SOUTHEAST;
-            else if (LeftHandYCoord > RightShoulderYCoord - 0.25 && RightAnkleZCoord > MidSpineZCoord + 0.20)
+            if (LeftHandYCoord > RightShoulderYCoord - 0.25 && RightAnkleZCoord > MidSpineZCoord + 0.20)
                 return directions.NORTWEST;
-            else if (LeftHandYCoord > RightShoulderYCoord - 0.25 && RightAnkleZCoord < MidSpineZCoord - 0.20)
+            if (LeftHandYCoord > RightShoulderYCoord - 0.25 && RightAnkleZCoord < MidSpineZCoord - 0.20)
                 return directions.SOUTHWEST;
-            else if (RightHandYCoord > RightShoulderYCoord - 0.25)
+            if (RightHandYCoord > RightShoulderYCoord - 0.25 && RightHandYCoord > 0)
                 return directions.EAST;
-            else if (LeftHandYCoord > LeftShoulderYCoord - 0.25)
+            if (LeftHandYCoord > LeftShoulderYCoord - 0.25 && LeftHandYCoord > 0)
                 return directions.WEST;
-            else if (RightAnkleZCoord > MidSpineZCoord + 0.20)
+            if (RightAnkleZCoord > MidSpineZCoord + 0.20)
                 return directions.NORTH;
-            else if (RightAnkleZCoord < MidSpineZCoord - 0.20)
+            if (RightAnkleZCoord < MidSpineZCoord - 0.20)
                 return directions.SOUTH;
-            else return directions.STAY;
+            return directions.STAY;
         }
     }
 }
