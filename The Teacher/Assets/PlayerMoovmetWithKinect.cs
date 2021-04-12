@@ -35,31 +35,31 @@ namespace Assets
 
             switch (GetDirection(body)) {
                 case directions.STAY:
-                    Moove(0, 0);
+                    Move(0, 0);
                     break;
                 case directions.EAST:
-                    Moove(0.75f, 0);
+                    Move(0.75f, 0);
                     break;
                 case directions.WEST:
                     Moove(-0.75f, 0);
                     break;
                 case directions.NORTH:
-                    Moove(0, -0.75f);
+                    Move(0, -0.75f);
                     break;
                 case directions.SOUTH:
-                    Moove(0, 0.75f);
+                    Move(0, 0.75f);
                     break;
                 case directions.NORTEAST:
-                    Moove(0.75f, -0.75f);
+                    Move(0.75f, -0.75f);
                     break;
                 case directions.SOUTHEAST:
-                    Moove(0.75f, 0.75f);
+                    Move(0.75f, 0.75f);
                     break;
                 case directions.NORTWEST:
-                    Moove(-0.75f, -0.75f);
+                    Move(-0.75f, -0.75f);
                     break;
                 case directions.SOUTHWEST:
-                    Moove(-0.75f, 0.75f);
+                    Move(-0.75f, 0.75f);
                     break;
             }
         }
@@ -68,7 +68,7 @@ namespace Assets
             rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
         }
 
-        private void Moove(float x, float y) {
+        private void Move(float x, float y) {
             movement.x = x;
             movement.y = y;
             animator.SetFloat("Vertical", movement.y);
