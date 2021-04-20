@@ -8,7 +8,7 @@ public class KinectControll : MonoBehaviour
     public float minX;              //The minimum x position that the paddle can move to
     public float maxX;
     public GameObject BodySourceManager;
-    public float moveSpeed = 300f;
+    public float moveSpeed = 450f;
     public Rigidbody2D rb;
     //public Animator animator;
     Vector2 movement;
@@ -48,14 +48,10 @@ public class KinectControll : MonoBehaviour
         else Move(0);
 
     }
-    void FixedUpdate()
-    {
-        rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
-    }
     private void Move(float x)
     {
         movement.x = x;
-        rb.velocity = new Vector2(x * moveSpeed * Time.deltaTime, 0);
-        transform.position = new Vector2(Mathf.Clamp(transform.position.x, minX, maxX), transform.position.y);
+        if(rb.position.x  + movement.x >= minX && rb.position.x + movement.x <= maxX)
+            rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
     }
 }
